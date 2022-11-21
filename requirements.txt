@@ -14,3 +14,4 @@ einops~=0.6.0
 PyYAML~=6.0
 yacs
 scikit-image
+opencv-python

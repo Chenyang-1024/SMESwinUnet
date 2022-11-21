@@ -24,14 +24,14 @@ if [$data_dir]
 then
     DATA_DIR = $data_dir
 else
-    DATA_DIR = './data/ACDC/test_vol_h5'
+    DATA_DIR = './data/ACDC'
 fi
 
 if [$learning_rate]
 then
     LEARNING_RATE = $learning_rate
 else
-    LEARNING_RATE = 0.05
+    LEARNING_RATE = 0.005
 fi
 
 if [$img_size]
@@ -45,7 +45,7 @@ if [$batch_size]
 then
     BATCH_SIZE = $batch_size
 else
-    BATCH_SIZE = 24
+    BATCH_SIZE = 12
 fi
 
 echo "start test model"

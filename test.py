@@ -17,7 +17,7 @@ from config import get_config
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--volume_path', type=str,
-                    default='./data/ACDC/test_vol_h5', help='root dir for validation volume data')  # for acdc volume_path=root_dir
+                    default='./data/ACDC', help='root dir for validation volume data')  # for acdc volume_path=root_dir
 parser.add_argument('--dataset', type=str,
                     default='ACDC', help='experiment_name')
 parser.add_argument('--num_classes', type=int,

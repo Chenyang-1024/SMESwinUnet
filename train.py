@@ -12,7 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='./data/ACDC/train_npz', help='root dir for data')
+                    default='./data/ACDC', help='root dir for data')
 parser.add_argument('--dataset', type=str,
                     default='ACDC', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
@@ -26,11 +26,11 @@ parser.add_argument('--max_iterations', type=int,
 parser.add_argument('--max_epochs', type=int,
                     default=150, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int,
-                    default=24, help='batch_size per gpu')
+                    default=12, help='batch_size per gpu')
 parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
 parser.add_argument('--deterministic', type=int,  default=1,
                     help='whether use deterministic training')
-parser.add_argument('--base_lr', type=float,  default=0.01,
+parser.add_argument('--base_lr', type=float,  default=0.005,
                     help='segmentation network learning rate')
 parser.add_argument('--img_size', type=int,
                     default=224, help='input patch size of network input')
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
 
-    dataset_name = args.datset
+    dataset_name = args.dataset
     dataset_config = {
         'ACDC': {
             'root_path': args.root_path,

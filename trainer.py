@@ -57,7 +57,7 @@ def trainer_acdc (args, model, snapshot_path):
 
     for epoch_num in iterator:
         # record the loss in this epoch
-        epoch_loss_list = []
+        # epoch_loss_list = []
         for i_batch, sampled_batch in enumerate(trainloader):
             image_batch, label_batch = sampled_batch['image'], sampled_batch['label']
             image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
@@ -65,7 +65,7 @@ def trainer_acdc (args, model, snapshot_path):
             loss_ce = ce_loss(outputs, label_batch[:].long())
             loss_dice = dice_loss(outputs, label_batch, softmax=True)
             loss = 0.4 * loss_ce + 0.6 * loss_dice
-            epoch_loss_list.append(loss)
+            # epoch_loss_list.append(loss)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -90,8 +90,8 @@ def trainer_acdc (args, model, snapshot_path):
                 writer.add_image('train/GroundTruth', labs, iter_num)
 
         # put the mean loss of this epoch into global loss list
-        epoch_loss = np.mean(epoch_loss_list)
-        epoch_loss_values.append(epoch_loss)
+        # epoch_loss = np.mean(epoch_loss_list)
+        # epoch_loss_values.append(epoch_loss)
 
         save_interval = 50  # int(max_epoch/6)
         if epoch_num > int(max_epoch / 2) and (epoch_num + 1) % save_interval == 0:
@@ -107,17 +107,17 @@ def trainer_acdc (args, model, snapshot_path):
             break
 
         # save the picture of plotting the loss and dice score
-        plt.switch_backend('Agg')
-        plt.figure("train", (12, 6))
-
-        plt.title("Iteration Average Loss")
-        x = [len(trainloader) * (i + 1) for i in range(len(epoch_loss_values))]
-        y = epoch_loss_values
-        plt.xlabel("Iteration")
-        plt.plot(x, y)
-
-        plt.legend()
-        plt.savefig(os.path.join(args.logdir, "training_loss.jpg"))
+        # plt.switch_backend('Agg')
+        # plt.figure("train", (12, 6))
+        #
+        # plt.title("Iteration Average Loss")
+        # x = [len(trainloader) * (i + 1) for i in range(len(epoch_loss_values))]
+        # y = epoch_loss_values
+        # plt.xlabel("Iteration")
+        # plt.plot(x, y)
+        #
+        # plt.legend()
+        # plt.savefig(os.path.join(args.logdir, "training_loss.jpg"))
 
     writer.close()
     return "Training Finished!"

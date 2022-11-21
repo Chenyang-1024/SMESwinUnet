@@ -111,10 +111,10 @@ def test_single_volume(image, label, net, classes, patch_size=[256, 256], test_s
             if prediction.shape[0] != input_w or prediction.shape[1].cpu() != input_h:
                 prediction = zoom(prediction, ( input_w/prediction.shape[0], input_h/prediction.shape[1]), order=0)
 
-    metrics = StreamSegMetrics(classes) if dataset_name != 'Synapse' else None# TODO add new
-    metrics.update(prediction, label) if dataset_name != 'Synapse' else None# TODO add new
+    metrics = StreamSegMetrics(classes) if dataset_name != 'ACDC' else None# TODO add new
+    metrics.update(prediction, label) if dataset_name != 'ACDC' else None# TODO add new
             # cv2.imwrite(test_save_path + '/' + case + "_pred.jpg", prediction)
-    score = metrics.get_results() if dataset_name != 'Synapse' else []
+    score = metrics.get_results() if dataset_name != 'ACDC' else []
 
     metric_list = []
     for i in range(1, classes):
@@ -127,7 +127,7 @@ def test_single_volume(image, label, net, classes, patch_size=[256, 256], test_s
         img_itk.SetSpacing((1, 1, z_spacing))
         prd_itk.SetSpacing((1, 1, z_spacing))
         lab_itk.SetSpacing((1, 1, z_spacing))
-        sitk.WriteImage(prd_itk, test_save_path + '/'+case + "_pred.nii.gz") if dataset_name=='Synapse' else cv2.imwrite(test_save_path + '/' + case + "_pred.jpg", prediction)
-        sitk.WriteImage(img_itk, test_save_path + '/'+ case + "_img.nii.gz") if dataset_name=='Synapse' else cv2.imwrite(test_save_path + '/' + case + "_img.jpg", image)
-        sitk.WriteImage(lab_itk, test_save_path + '/'+ case + "_gt.nii.gz") if dataset_name=='Synapse' else cv2.imwrite(test_save_path + '/' + case + "_gt.jpg", label)
+        sitk.WriteImage(prd_itk, test_save_path + '/'+case + "_pred.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_pred.jpg", prediction)
+        sitk.WriteImage(img_itk, test_save_path + '/'+ case + "_img.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_img.jpg", image)
+        sitk.WriteImage(lab_itk, test_save_path + '/'+ case + "_gt.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_gt.jpg", label)
     return metric_list, score
