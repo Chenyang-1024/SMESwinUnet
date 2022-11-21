@@ -3,13 +3,14 @@ import os
 import random
 import numpy as np
 import torch
-
 import torch.backends.cudnn as cudnn
+from networks.vision_transformer import SwinUnet as ViT_seg
+from trainer import trainer_acdc
 from config import get_config
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='../data/ACDC', help='root dir for data')
+                    default='./data/ACDC', help='root dir for data')
 parser.add_argument('--dataset', type=str,
                     default='ACDC', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
@@ -93,4 +94,8 @@ if __name__ == "__main__":
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
+    net = ViT_seg(config, img_size=args.img_size, num_classes=args.num_classes).cuda()
+    net.load_from(config)
 
+    trainer = {'ACDC': trainer_acdc, }
+    trainer[dataset_name](args, net, args.output_dir)

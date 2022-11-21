@@ -1,15 +1,20 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.utils.checkpoint as checkpoint
 from einops import rearrange
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
-#from networks.models.attention.ExternalAttention import ExternalAttention 
+from networks.ExternalAttention import ExternalAttention
 from torch.nn.init import kaiming_normal_, constant_
 from .mcct import ChannelTransformer, get_CTranS_config
 from skimage.segmentation import slic
 from skimage.segmentation import mark_boundaries
 
 config_vit = get_CTranS_config()
+
+class Flatten(nn.Module):
+    def forward(self, x):
+        return x.view(x.size(0), -1)
 
 class CCA(nn.Module):
     """
