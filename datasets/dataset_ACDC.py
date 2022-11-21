@@ -39,8 +39,11 @@ class RandomGenerator(object):
         x, y = image.shape
         if x != self.output_size[0] or y != self.output_size[1]:
             image = zoom(image, (self.output_size[0] / x, self.output_size[1] / y), order=3)  # why not 3?
+            # image = zoom(image, (self.output_size[0] / x, self.output_size[1] / y, 1), order=3)
             label = zoom(label, (self.output_size[0] / x, self.output_size[1] / y), order=0)
         image = torch.from_numpy(image.astype(np.float32)).unsqueeze(0)
+        # image = torch.from_numpy(image.astype(np.float32))
+        # image = image.permute(2, 0, 1)
         label = torch.from_numpy(label.astype(np.float32))
         sample = {'image': image, 'label': label.long()}
         return sample
@@ -60,13 +63,23 @@ class ACDC_dataset(Dataset):
         if self.split == "train":
             slice_name = self.sample_list[idx].strip('\n')
             data_path = os.path.join(self.data_dir, slice_name+'.npz')
+            # data_path = self.data_dir + "/" + slice_name + '.npz'
             data = np.load(data_path)
             image, label = data['image'], data['label']
         else:
-            vol_name = self.sample_list[idx].strip('\n')
-            filepath = self.data_dir + "/{}.npy.h5".format(vol_name)
-            data = h5py.File(filepath)
+            # TODO 测试数据的读取
+            slice_name = self.sample_list[idx].strip('\n')
+            # vol_name = self.sample_list[idx].strip('\n')
+            data_path = os.path.join(self.data_dir, slice_name + '.npz')
+            # data_path = self.data_dir + "/" + slice_name + '.npz'
+            # filepath = self.data_dir + "/{}.npy.h5".format(vol_name)
+            # data = h5py.File(filepath)
+            data = np.load(data_path)
             image, label = data['image'][:], data['label'][:]
+            image = torch.from_numpy(image.astype(np.float32))
+            image = image.permute(2, 0, 1)
+            label = torch.from_numpy(label.astype(np.float32))
+            label = label.permute(2, 0, 1)
 
         sample = {'image': image, 'label': label}
         if self.transform:

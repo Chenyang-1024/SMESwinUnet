@@ -8,9 +8,11 @@ from networks.vision_transformer import SwinUnet as ViT_seg
 from trainer import trainer_acdc
 from config import get_config
 
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='./data/ACDC', help='root dir for data')
+                    default='./data/ACDC/train_npz', help='root dir for data')
 parser.add_argument('--dataset', type=str,
                     default='ACDC', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
