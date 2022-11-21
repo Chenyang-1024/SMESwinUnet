@@ -67,7 +67,7 @@ class ACDC_dataset(Dataset):
             data = np.load(data_path)
             image, label = data['image'], data['label']
         else:
-            # TODO 测试数据的读取
+            # 测试数据的读取
             slice_name = self.sample_list[idx].strip('\n')
             # vol_name = self.sample_list[idx].strip('\n')
             data_path = os.path.join(self.data_dir, slice_name + '.npz')

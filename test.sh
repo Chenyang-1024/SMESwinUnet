@@ -10,21 +10,21 @@ if [$out_dir]
 then
     OUT_DIR = $out_dir
 else
-    OUT_DIR  = './model_out'
+    OUT_DIR  = './out'
 fi
 
 if [$cfg]
 then
     CFG = $cfg
 else
-    CFG = 'configs/swin_tiny_patch4_window7_224_lite.yaml'
+    CFG = './configs/swin_tiny_patch4_window7_224_lite.yaml'
 fi
 
 if [$data_dir]
 then
     DATA_DIR = $data_dir
 else
-    DATA_DIR = 'datasets/Synapse'
+    DATA_DIR = './data/ACDC/test_vol_h5'
 fi
 
 if [$learning_rate]
@@ -49,4 +49,4 @@ else
 fi
 
 echo "start test model"
-pyhton test.py --dataset Synapse --cfg $CFG --is_saveni --volume_path $DATA_DIR --max_epochs $EPOCH_TIME --output_dir $OUT_DIR --img_size $IMG_SIZE --base_lr $LEARNING_RATE --batch_size $BATCH_SIZE
+pyhton test.py --dataset ACDC --cfg $CFG --is_savenii --volume_path $DATA_DIR --max_epochs $EPOCH_TIME --output_dir $OUT_DIR --img_size $IMG_SIZE --base_lr $LEARNING_RATE --batch_size $BATCH_SIZE

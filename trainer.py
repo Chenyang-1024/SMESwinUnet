@@ -15,6 +15,7 @@ from tqdm import tqdm
 from utils import DiceLoss
 from torchvision import transforms
 from utils import test_single_volume
+import matplotlib.pyplot as plt
 
 
 def trainer_acdc (args, model, snapshot_path):
@@ -35,7 +36,7 @@ def trainer_acdc (args, model, snapshot_path):
     def worker_init_fn(worker_id):
         random.seed(args.seed + worker_id)
 
-    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True,
+    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True,
                              worker_init_fn=worker_init_fn)
     if args.n_gpu > 1:
         model = nn.DataParallel(model)
@@ -50,7 +51,13 @@ def trainer_acdc (args, model, snapshot_path):
     logging.info("{} iterations per epoch. {} max iterations ".format(len(trainloader), max_iterations))
     best_performance = 0.0
     iterator = tqdm(range(max_epoch), ncols=70)
+
+    # record the loss per epoch and the dice score per epoch
+    epoch_loss_values = []
+
     for epoch_num in iterator:
+        # record the loss in this epoch
+        epoch_loss_list = []
         for i_batch, sampled_batch in enumerate(trainloader):
             image_batch, label_batch = sampled_batch['image'], sampled_batch['label']
             image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
@@ -58,6 +65,7 @@ def trainer_acdc (args, model, snapshot_path):
             loss_ce = ce_loss(outputs, label_batch[:].long())
             loss_dice = dice_loss(outputs, label_batch, softmax=True)
             loss = 0.4 * loss_ce + 0.6 * loss_dice
+            epoch_loss_list.append(loss)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -81,6 +89,10 @@ def trainer_acdc (args, model, snapshot_path):
                 labs = label_batch[1, ...].unsqueeze(0) * 50
                 writer.add_image('train/GroundTruth', labs, iter_num)
 
+        # put the mean loss of this epoch into global loss list
+        epoch_loss = np.mean(epoch_loss_list)
+        epoch_loss_values.append(epoch_loss)
+
         save_interval = 50  # int(max_epoch/6)
         if epoch_num > int(max_epoch / 2) and (epoch_num + 1) % save_interval == 0:
             save_mode_path = os.path.join(snapshot_path, 'epoch_' + str(epoch_num) + '.pth')
@@ -94,7 +106,18 @@ def trainer_acdc (args, model, snapshot_path):
             iterator.close()
             break
 
-    #     加一个训练损失与精度的可视化坐标图 TODO
+        # save the picture of plotting the loss and dice score
+        plt.switch_backend('Agg')
+        plt.figure("train", (12, 6))
+
+        plt.title("Iteration Average Loss")
+        x = [len(trainloader) * (i + 1) for i in range(len(epoch_loss_values))]
+        y = epoch_loss_values
+        plt.xlabel("Iteration")
+        plt.plot(x, y)
+
+        plt.legend()
+        plt.savefig(os.path.join(args.logdir, "training_loss.jpg"))
 
     writer.close()
     return "Training Finished!"

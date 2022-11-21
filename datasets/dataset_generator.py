@@ -9,9 +9,9 @@ from scipy import ndimage
 from scipy.ndimage.interpolation import zoom
 from torch.utils.data import Dataset
 
-
+# this is old version and there is something wrong, i will modify it later
 def npz_test():
-    # 图像路径 TODO
+    # 图像路径
     path = r'D:\PycharmProjects\TransUNet\data\ACDC\test\imgs\*.png'
     # 项目中存放测试所用的npz文件路径
     path2 = r'/data/cy/projects/SMESwinUnet/data/ACDC/test_vol_h5/'
@@ -44,7 +44,7 @@ def npz_test():
 
 
 def npz_train():
-    # 图像路径 TODO
+    # 图像路径
     path = r'D:\PycharmProjects\TransUNet\data\ACDC\train\imgs\*.png'
     # 项目中存放训练所用的npz文件路径
     path2 = r'/data/cy/projects/SMESwinUnet/data/ACDC/train_npz/'
@@ -74,23 +74,16 @@ def npz_train():
     print('train_set' + 'ok')
 
 
-if __name__ == "__main__":
-    npz_train()
-    npz_test()
+# npz_train()
+# npz_test()
 
-    # 加载npz文件
-    # data = np.load(r'D:\PycharmProjects\TransUNet\data\MSD02\test_vol_h5\case005_slice003.npz', allow_pickle=True)
-    # image, label = data['image'], data['label']
-    #
-    # print("image -----" + str(image.shape))
-    # print("label -----" + str(label.shape))
+# 加载npz文件
+data = np.load(r'/data/cy/projects/SMESwinUnet/data/ACDC/test_vol_h5/patient034_01_0_0.npz', allow_pickle=True)
+image, label = data['image'], data['label']
 
-    # image[label == 1] = 100
-    # image[label == 2] = 187
-    # image[label == 3] = 255
-    # cv2.imshow('image', image)
-    # # cv2.imshow('label', label)
-    # print(label[75:125, 75:125])
-    # # print('image.shape' + '--------' + str(image.shape))
-    # # print('label.shape' + '--------' + str(label.shape))
-    # cv2.waitKey(0)
+print('image.shape' + '--------' + str(image.shape))
+print('label.shape' + '--------' + str(label.shape))
+
+cv2.imshow('image', image)
+cv2.imshow('label', label)
+cv2.waitKey(0)
