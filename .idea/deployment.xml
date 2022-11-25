@@ -23,6 +23,20 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="cy@172.17.173.22:22 password (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/data/projects/SMESwinUnet" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="cy@172.17.173.22:22 password (4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/data/projects/SMESwinUnet" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
     <option name="myAutoUpload" value="ALWAYS" />
   </component>

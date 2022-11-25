@@ -15,6 +15,8 @@ from networks.vision_transformer import SwinUnet as ViT_seg
 from trainer import trainer_acdc
 from config import get_config
 
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--volume_path', type=str,
                     default='./data/ACDC', help='root dir for validation volume data')  # for acdc volume_path=root_dir
@@ -73,7 +75,8 @@ def inference(args, model, test_save_path=None):
         h, w = sampled_batch["image"].size()[2:]
         image, label, case_name = sampled_batch["image"], sampled_batch["label"], sampled_batch['case_name'][0]
         metric_i = test_single_volume(image, label, model, classes=args.num_classes, patch_size=[args.img_size, args.img_size],
-                                      test_save_path=test_save_path, case=case_name, z_spacing=args.z_spacing)
+                                      test_save_path=test_save_path, case=case_name, z_spacing=args.z_spacing, dataset_name='ACDC')
+        print('metric_i ----> ' + str(metric_i))
         metric_list += np.array(metric_i)
         logging.info('idx %d case %s mean_dice %f mean_hd95 %f' % (i_batch, case_name, np.mean(metric_i, axis=0)[0], np.mean(metric_i, axis=0)[1]))
     metric_list = metric_list / len(db_test)
@@ -104,7 +107,6 @@ if __name__ == "__main__":
             'volume_path': args.volume_path,
             'list_dir': './lists/lists_ACDC',
             'num_classes': 4,
-            # 查看一下 ACDC 数据头的 z_spacing 多大 TODO
             'z_spacing': 1,
         },
     }

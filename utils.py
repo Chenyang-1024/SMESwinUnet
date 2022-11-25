@@ -71,7 +71,8 @@ def calculate_metric_percase(pred, gt):
 def test_single_volume(image, label, net, classes, patch_size=[256, 256], test_save_path=None, case=None, z_spacing=1,
                        dataset_name='others'):
     image, label = image.squeeze(0).cpu().detach().numpy(), label.squeeze(0).cpu().detach().numpy()
-    input_shape= 3 if dataset_name == 'Synapse' else 2 # TODO len(image.shape) == 3 if data is synapse else 2
+    input_shape= 3 if dataset_name == 'ACDC' else 2 # TODO len(image.shape) == 3 if data is ACDC else 2
+    print("ACDC image shape ----> " + str(len(image.shape)))
     if len(image.shape) == input_shape:
         prediction = np.zeros_like(label)
         #image = image.transpose(2, 0, 1)
@@ -130,4 +131,8 @@ def test_single_volume(image, label, net, classes, patch_size=[256, 256], test_s
         sitk.WriteImage(prd_itk, test_save_path + '/'+case + "_pred.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_pred.jpg", prediction)
         sitk.WriteImage(img_itk, test_save_path + '/'+ case + "_img.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_img.jpg", image)
         sitk.WriteImage(lab_itk, test_save_path + '/'+ case + "_gt.nii.gz") if dataset_name=='ACDC' else cv2.imwrite(test_save_path + '/' + case + "_gt.jpg", label)
-    return metric_list, score
+
+    if dataset_name != 'ACDC':
+        return metric_list, score
+    else:
+        return metric_list
