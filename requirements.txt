@@ -1,5 +1,5 @@
-torch==1.4.0
-torchvision==0.5.0
+torch==1.12.1
+torchvision==0.13.1
 numpy~=1.21.6
 tqdm
 tensorboard
@@ -13,5 +13,6 @@ timm~=0.6.7
 einops~=0.6.0
 PyYAML~=6.0
 yacs
-scikit-image
+scikit-image==0.18.3
 opencv-python
+scikit-learn

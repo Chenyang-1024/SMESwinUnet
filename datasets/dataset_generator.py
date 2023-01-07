@@ -1,13 +1,11 @@
 import os
 import random
 import h5py
+import SimpleITK as sitk
 import numpy as np
-import torch
+import matplotlib.pyplot as plt
 import cv2
 import glob
-from scipy import ndimage
-from scipy.ndimage.interpolation import zoom
-from torch.utils.data import Dataset
 
 # this is old version and there is something wrong, i will modify it later
 def npz_test():
@@ -73,17 +71,54 @@ def npz_train():
 
     print('train_set' + 'ok')
 
+def read_img(img_path):
+    return sitk.GetArrayFromImage(sitk.ReadImage(img_path))
+
+def imshow(img):
+    plt.imshow(img)
+    plt.show()
+
 
 # npz_train()
 # npz_test()
 
-# 加载npz文件
-data = np.load(r'/data/cy/projects/SMESwinUnet/data/ACDC/test_vol_h5/patient034_01_0_0.npz', allow_pickle=True)
-image, label = data['image'], data['label']
+# # 加载npz文件
+# data = np.load(r'E:\PycharmProjects\SMESwinUnet\data\ACDC\test_vol_h5\patient033_01_0_6.npz', allow_pickle=True)
+# image, label = data['image'], data['label']
+#
+# print('image.shape' + '--------' + str(image.shape))
+# print('label.shape' + '--------' + str(label.shape))
+#
+# l = label.copy()
+#
+# l[l == 1] = 100
+# l[l == 2] = 187
+# l[l == 3] = 255
+#
+# cv2.imshow('image', image)
+# cv2.imshow('label', l)
+# cv2.waitKey(0)
 
-print('image.shape' + '--------' + str(image.shape))
-print('label.shape' + '--------' + str(label.shape))
+image1 = r'E:\PycharmProjects\SMESwinUnet\out\predictions\patient033_01_0_6_pred.nii.gz'
+image2 = r'E:\PycharmProjects\SMESwinUnet\out\predictions\patient033_01_0_6_img.nii.gz'
+image3 = r'E:\PycharmProjects\SMESwinUnet\out\predictions\patient033_01_0_6_gt.nii.gz'
 
-cv2.imshow('image', image)
-cv2.imshow('label', label)
-cv2.waitKey(0)
+image1 = read_img(image1)
+image2 = read_img(image2)
+image3 = read_img(image3)
+
+image = image3.copy()
+image[image == 1] = 100
+image[image == 2] = 187
+image[image == 3] = 255
+
+if image1.sum() == 0:
+    print('nothing')
+
+print(image1.shape)
+print(image2.shape)
+print(image3.shape)
+
+imshow(image1[1, :, :])
+imshow(image2[1, :, :])
+imshow(image[1, :, :])
