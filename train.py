@@ -12,13 +12,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='./data/ACDC', help='root dir for data')
+                    default='./data/MoNuSeg', help='root dir for data')
 parser.add_argument('--dataset', type=str,
-                    default='ACDC', help='experiment_name')
+                    default='MoNuSeg', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
-                    default='./lists/lists_ACDC', help='list dir')
+                    default='./lists/lists_MoNuSeg', help='list dir')
 parser.add_argument('--num_classes', type=int,
-                    default=4, help='output channel of network or the number of classes to segment')
+                    default=2, help='output channel of network or the number of classes to segment')
 parser.add_argument('--output_dir', type=str,
                     default='./out', help='output dir')
 parser.add_argument('--max_iterations', type=int,
@@ -60,7 +60,7 @@ parser.add_argument('--eval', action='store_true', help='Perform evaluation only
 parser.add_argument('--throughput', action='store_true', help='Test throughput only')
 
 args = parser.parse_args()
-if args.dataset == "ACDC":
+if args.dataset == "MoNuSeg":
     args.root_path = os.path.join(args.root_path, "train_npz")
 config = get_config(args)
 
@@ -85,6 +85,11 @@ if __name__ == "__main__":
             'list_dir': './lists/lists_ACDC',
             'num_classes': 4
         },
+        'MoNuSeg': {
+            'root_path': args.root_path,
+            'list_dir': './lists/lists_MoNuSeg',
+            'num_classes': 2
+        },
     }
 
     if args.batch_size != 24 and args.batch_size % 6 == 0:
@@ -99,5 +104,5 @@ if __name__ == "__main__":
     net = ViT_seg(config, img_size=args.img_size, num_classes=args.num_classes).cuda()
     net.load_from(config)
 
-    trainer = {'ACDC': trainer_acdc, }
+    trainer = {'ACDC': trainer_acdc, 'MoNuSeg': trainer_acdc}
     trainer[dataset_name](args, net, args.output_dir)

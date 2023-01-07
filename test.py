@@ -17,13 +17,13 @@ from config import get_config
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--volume_path', type=str,
-                    default='./data/ACDC', help='root dir for validation volume data')  # for acdc volume_path=root_dir
+                    default='./data/MoNuSeg', help='root dir for validation volume data')  # for acdc volume_path=root_dir
 parser.add_argument('--dataset', type=str,
-                    default='ACDC', help='experiment_name')
+                    default='MoNuSeg', help='experiment_name')
 parser.add_argument('--num_classes', type=int,
-                    default=4, help='output channel of network')
+                    default=2, help='output channel of network')
 parser.add_argument('--list_dir', type=str,
-                    default='./lists/lists_ACDC', help='list dir')
+                    default='./lists/lists_MoNuSeg', help='list dir')
 parser.add_argument('--output_dir', type=str, help='output dir')
 parser.add_argument('--max_iterations', type=int,default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int, default=150, help='maximum epoch number to train')
@@ -58,7 +58,7 @@ parser.add_argument('--eval', action='store_true', help='Perform evaluation only
 parser.add_argument('--throughput', action='store_true', help='Test throughput only')
 
 args = parser.parse_args()
-if args.dataset == "ACDC":
+if args.dataset == "MoNuSeg":
     args.volume_path = os.path.join(args.volume_path, "test_vol_h5")
 config = get_config(args)
 
@@ -106,6 +106,13 @@ if __name__ == "__main__":
             'num_classes': 4,
             # 查看一下 ACDC 数据头的 z_spacing 多大 TODO
             'z_spacing': 1,
+        },
+        'MoNuSeg': {
+            'Dataset': ACDC_dataset,
+            'volume_path': args.volume_path,
+            'list_dir': './lists/lists_MoNuSeg',
+            'num_classes': 2,
+            # 'z_spacing': 1,
         },
     }
     dataset_name = args.dataset
